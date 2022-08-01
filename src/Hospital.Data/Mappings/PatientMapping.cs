@@ -22,21 +22,9 @@ public class PatientMapping : IEntityTypeConfiguration<Patient>
             .IsRequired()
             .HasColumnType("varchar(40)");
 
-        // builder.Property(p => p.Address)
-        //     .IsRequired()
-        //     .HasColumnType("varchar(1000)");
-
-        builder.Property(p => p.Phone)
-            .IsRequired()
-            .HasColumnType("varchar(20)");
-
         builder.Property(p => p.DateBirth)
             .IsRequired()
             .HasColumnType("date");
-        
-        builder.HasMany(p => p.Prescriptions)
-            .WithOne(p => p.Patient)
-            .HasForeignKey(p => p.PatientId);
 
         builder.ToTable("Patients");
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Data.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    [Migration("20220723183757_PrescriptionsTable")]
-    partial class PrescriptionsTable
+    [Migration("20220801013644_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,10 +68,6 @@ namespace Hospital.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Patients", (string)null);
@@ -106,17 +102,12 @@ namespace Hospital.Data.Migrations
             modelBuilder.Entity("Hospital.Business.Models.Prescription", b =>
                 {
                     b.HasOne("Hospital.Business.Models.Patient", "Patient")
-                        .WithMany("Prescriptions")
+                        .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("Hospital.Business.Models.Patient", b =>
-                {
-                    b.Navigation("Prescriptions");
                 });
 
             modelBuilder.Entity("Hospital.Business.Models.Prescription", b =>

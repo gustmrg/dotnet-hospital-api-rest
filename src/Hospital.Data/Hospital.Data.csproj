@@ -19,4 +19,8 @@
       <ProjectReference Include="..\Hospital.Business\Hospital.Business.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations" />
+    </ItemGroup>
+
 </Project>

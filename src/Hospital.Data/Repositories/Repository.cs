@@ -40,7 +40,9 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual async Task Remove(Guid id)
     {
-        throw new NotImplementedException();
+        var entityToRemove = await DbSet.FindAsync(id);
+        DbSet.Remove(entityToRemove);
+        await SaveChanges();
     }
 
     public async Task<int> SaveChanges()

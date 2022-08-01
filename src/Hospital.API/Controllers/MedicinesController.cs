@@ -19,13 +19,22 @@ public class MedicinesController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Obter todos os remédios cadastrados.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MedicineDTO>>> GetAll()
     {
-        var medicines = _mapper.Map<MedicineDTO>(await _medicineRepository.GetAll());
+        var medicines = _mapper.Map<IEnumerable<MedicineDTO>>(await _medicineRepository.GetAll());
         return Ok(medicines);
     }
     
+    /// <summary>
+    /// Obter o remédio cadastrado pelo seu id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<MedicineDTO>> GetById(Guid id)
     {
@@ -35,4 +44,24 @@ public class MedicinesController : ControllerBase
 
         return Ok(medicine);
     }
+
+    /// <summary>
+    /// Cadastra um novo remédio.
+    /// </summary>
+    /// <param name="medicineDto"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<ActionResult<MedicineDTO>> Add(MedicineDTO medicineDto)
+    {
+        if (!ModelState.IsValid) return BadRequest();
+
+        var medicine = _mapper.Map<Medicine>(medicineDto);
+        await _medicineRepository.Add(medicine);
+        return Ok(medicineDto);
+    }
+    
+    // Update
+    
+    // Remove
+
 }

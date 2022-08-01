@@ -60,4 +60,8 @@ public class PatientsController : ControllerBase
         return Ok(patient);
     }
     
+    // Update
+    
+    // Remove
+    
 }

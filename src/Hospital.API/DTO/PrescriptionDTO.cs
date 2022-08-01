@@ -9,11 +9,6 @@ public class PrescriptionDTO
     
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public DateTime DatePrescription { get; set; }
-    
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    public Guid PatientId { get; set; }
 
-    public PatientDTO Patient { get; set; }
-    
-    public List<MedicineDTO> Medicines { get; set; }
+    public ICollection<MedicineDTO> Medicines { get; set; }
 }

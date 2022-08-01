@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Data.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    [Migration("20220713162153_Initial")]
-    partial class Initial
+    [Migration("20220801133532_RemovedPatientFKFromPrescriptionTable")]
+    partial class RemovedPatientFKFromPrescriptionTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,14 +38,24 @@ namespace Hospital.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
-                    b.Property<Guid>("PatientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId");
-
                     b.ToTable("Medicines", (string)null);
+                });
+
+            modelBuilder.Entity("Hospital.Business.Models.MedicinePrescription", b =>
+                {
+                    b.Property<Guid>("MedicineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PrescriptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MedicineId", "PrescriptionId");
+
+                    b.HasIndex("PrescriptionId");
+
+                    b.ToTable("MedicinePrescription");
                 });
 
             modelBuilder.Entity("Hospital.Business.Models.Patient", b =>
@@ -53,10 +63,6 @@ namespace Hospital.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("varchar(1000)");
 
                     b.Property<byte>("Age")
                         .HasColumnType("tinyint");
@@ -72,29 +78,52 @@ namespace Hospital.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Patients", (string)null);
                 });
 
-            modelBuilder.Entity("Hospital.Business.Models.Medicine", b =>
+            modelBuilder.Entity("Hospital.Business.Models.Prescription", b =>
                 {
-                    b.HasOne("Hospital.Business.Models.Patient", "Patients")
-                        .WithMany("Medicines")
-                        .HasForeignKey("PatientId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DatePrescription")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Prescriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Hospital.Business.Models.MedicinePrescription", b =>
+                {
+                    b.HasOne("Hospital.Business.Models.Medicine", "Medicine")
+                        .WithMany("MedicinePrescriptions")
+                        .HasForeignKey("MedicineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Patients");
+                    b.HasOne("Hospital.Business.Models.Prescription", "Prescription")
+                        .WithMany("MedicinePrescriptions")
+                        .HasForeignKey("PrescriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medicine");
+
+                    b.Navigation("Prescription");
                 });
 
-            modelBuilder.Entity("Hospital.Business.Models.Patient", b =>
+            modelBuilder.Entity("Hospital.Business.Models.Medicine", b =>
                 {
-                    b.Navigation("Medicines");
+                    b.Navigation("MedicinePrescriptions");
+                });
+
+            modelBuilder.Entity("Hospital.Business.Models.Prescription", b =>
+                {
+                    b.Navigation("MedicinePrescriptions");
                 });
 #pragma warning restore 612, 618
         }
